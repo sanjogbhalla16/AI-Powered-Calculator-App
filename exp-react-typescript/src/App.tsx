@@ -1,7 +1,14 @@
 import React from "react";
-
+import Todo from "./components/Todo";
 const App: React.FC = () => {
-  return <h1>Hello from react typescript </h1>;
+  return (
+    <div>
+      <Todo />
+      <Todo />
+      <Todo />
+      <Todo />
+    </div>
+  );
 };
 
 export default App;
