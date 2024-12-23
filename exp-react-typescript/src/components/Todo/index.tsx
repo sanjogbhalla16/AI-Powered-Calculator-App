@@ -1,14 +1,15 @@
 import React from "react";
 import Todoitem from "./TodoItem/item";
+import "./style.css";
 
 const Todo: React.FC = () => {
   return (
-    <div>
+    <div className="todo-container">
       <ol>
-        <Todoitem />
-        <Todoitem />
-        <Todoitem />
-        <Todoitem />
+        <Todoitem title="Eat" />
+        <Todoitem title="Sleep" />
+        <Todoitem title="Code" />
+        <Todoitem title="Repeat" />
       </ol>
     </div>
   );
