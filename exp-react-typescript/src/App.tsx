@@ -1,6 +1,6 @@
 import React from "react";
 import Todo from "./components/Todo";
-
+import Counter from "./components/Counter";
 const myTodoItems = [
   {
     id: 1,
@@ -20,6 +20,7 @@ const App: React.FC = () => {
       onClick={(e) => alert("hello")}
     >
       <Todo Items={myTodoItems} />
+      <Counter />
     </div>
   );
 };

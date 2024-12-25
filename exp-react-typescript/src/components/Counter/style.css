@@ -1,0 +1,13 @@
+.Counter-Container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  margin-left: 10px;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 10px 20px;
+  cursor: pointer;
+}
