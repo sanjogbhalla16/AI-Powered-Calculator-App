@@ -17,7 +17,7 @@ const App: React.FC = () => {
     <div
       className="abc"
       style={{ color: "white", border: "1px solid white" }}
-      onClick={(e) => alert("hello")}
+      //onClick={(e) => alert("hello")}
     >
       <Todo Items={myTodoItems} />
       <Counter />
