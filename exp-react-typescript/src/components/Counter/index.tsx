@@ -6,8 +6,12 @@ const Counter: React.FC = (props) => {
   return (
     <div className="Counter-Container">
       <h1>{counter}</h1>
-      <button style={{ backgroundColor: "green" }}>INC</button>
-      <button style={{ backgroundColor: "tomato" }}>DEC</button>
+      <button onClick={(e) => counter++} style={{ backgroundColor: "green" }}>
+        INC
+      </button>
+      <button onClick={(e) => counter--} style={{ backgroundColor: "tomato" }}>
+        DEC
+      </button>
     </div>
   );
 };
