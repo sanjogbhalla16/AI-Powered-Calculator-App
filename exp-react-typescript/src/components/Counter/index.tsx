@@ -7,6 +7,11 @@ const Counter: React.FC = (props) => {
 
   useEffect(() => {
     console.log("Counter");
+
+    return function () {
+      console.log("Counter Unmounted");
+    };
+    0;
   }, []);
 
   useEffect(() => {
