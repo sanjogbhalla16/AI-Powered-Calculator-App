@@ -5,6 +5,7 @@ const Counter: React.FC = (props) => {
   const [counter, setCounter] = useState(0);
   console.log(counter);
 
+  //component unmounted and how a component is mounted
   useEffect(() => {
     console.log("Counter");
 
@@ -14,6 +15,7 @@ const Counter: React.FC = (props) => {
     0;
   }, []);
 
+  //how a component is updated
   useEffect(() => {
     console.log("User updated the counter");
   }, [counter]);
