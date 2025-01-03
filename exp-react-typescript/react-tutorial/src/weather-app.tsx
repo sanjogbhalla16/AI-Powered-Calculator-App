@@ -1,7 +1,12 @@
 import React from "react";
 
 const WeatherApp = () => {
-  return <div>weather-app</div>;
+  return (
+    <div>
+      <input type="text" placeholder="Enter city name" />
+      <button>Search</button>
+    </div>
+  );
 };
 
 export default WeatherApp;
