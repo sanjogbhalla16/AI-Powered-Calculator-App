@@ -11,7 +11,7 @@ const WeatherApp: React.FC = () => {
     setCityName(e.target.value);
   }
   function handleClick() {
-    return console.log("clicked");
+    console.log("City name entered:", cityName);
   }
   return (
     <div>
