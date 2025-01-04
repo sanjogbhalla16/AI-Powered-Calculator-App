@@ -3,7 +3,7 @@ import "./style.css";
 
 const Counter: React.FC = (props) => {
   const [counter, setCounter] = useState(0);
-  console.log(counter);
+  //console.log(counter);
 
   //component unmounted and how a component is mounted
   useEffect(() => {
