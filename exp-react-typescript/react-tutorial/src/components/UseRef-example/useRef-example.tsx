@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef } from "react";
 
 const UseRefExample: React.FC = () => {
-  const [count, setCount] = useState(0);
+  //const [count, setCount] = useState(0);
   const [myData, setMyData] = useState("");
 
-  //takes a call back function and a dependency array , but we are not giving a dependency array
-  useEffect(() => {
-    setCount(count + 1);
-  });
+  const inputElem = useRef<HTMLInputElement>(null);
+
+  const changeStyle = () => {
+    if (inputElem.current) {
+      // Check if the ref is not null
+      inputElem.current.style.backgroundColor = "red"; // Change background color
+      inputElem.current.focus(); // Focus the input element
+    }
+  };
   return (
     <div>
       <input
+        ref={inputElem}
         type="text"
         value={myData}
         onChange={(e) => setMyData(e.target.value)}
       />
-      <p>The number of times it render: {count}</p>
+      <button onClick={changeStyle}>Submit</button>
     </div>
   );
 };
