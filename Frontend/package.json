@@ -14,12 +14,19 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.3.1",
     "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.471.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "recoil": "^0.7.7"
+    "react-router-dom": "^7.1.1",
+    "recoil": "^0.7.7",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.3.17",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
