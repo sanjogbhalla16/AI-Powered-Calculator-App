@@ -3,6 +3,7 @@ import { SWATCHES } from "@/constants";
 import { ColorSwatch, Group } from "@mantine/core";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+import { data } from "react-router-dom";
 
 interface Response {
   expr: string;
@@ -48,11 +49,17 @@ const HomeScreen: React.FC = () => {
       const response = await axios({
         method: "post",
         url: `${import.meta.env.VITE_API_URL}/calculate`,
+        headers: {
+          "Content-Type": "application/json",
+        },
         data: {
           image: canvas.toDataURL("image/png"),
           dict_of_vars: dictOfVars,
         },
       });
+      console.log(canvas.toDataURL("image/png"));
+      console.log(dictOfVars);
+
       //   .then((res) => res)
       //   .catch((err) => console.log(err));
       const resp = await response.data;

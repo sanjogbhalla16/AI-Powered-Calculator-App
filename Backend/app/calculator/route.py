@@ -14,7 +14,7 @@ async def analyze(data: ImageData):
     #Decodes the Base64-encoded image string into raw binary data.
     image_bytes = BytesIO(image_data) #Converts the raw binary data into an in-memory file-like object using BytesIO.
     image = Image.open(image_bytes)#Opens the in-memory image file using Pillow (PIL.Image).
-    responses = analyze_image(image, dict_for_vars=data.dict_for_vars) #Uses the dict_for_vars dictionary (passed from ImageData) to analyze the image content.
+    responses = analyze_image(image, dict_of_vars=data.dict_of_vars) #Uses the dict_for_vars dictionary (passed from ImageData) to analyze the image content.
     data = []
     for response in responses:
         data.append(response)
