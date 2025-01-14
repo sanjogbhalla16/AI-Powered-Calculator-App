@@ -21,7 +21,10 @@ const HomeScreen: React.FC = () => {
   const [color, setColor] = useState("rgb(255,255,255)");
   const [reset, SetReset] = useState(false);
   const [result, setResult] = useState<GeneratedResult>();
+  const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
+  const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 });
   const [dictOfVars, setDictOfVars] = useState({}); //x = 5 , y = 8
+
   useEffect(() => {
     if (reset) {
       resetCanvas();
@@ -40,6 +43,26 @@ const HomeScreen: React.FC = () => {
         ctx.lineWidth = 3;
       }
     }
+    const script = document.createElement("script");
+    script.src =
+      "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML";
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+      });
+    };
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
   const sendData = async () => {

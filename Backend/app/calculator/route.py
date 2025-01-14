@@ -16,6 +16,7 @@ async def analyze(data: ImageData):
     image = Image.open(image_bytes)#Opens the in-memory image file using Pillow (PIL.Image).
     responses = analyze_image(image, dict_of_vars=data.dict_of_vars) #Uses the dict_for_vars dictionary (passed from ImageData) to analyze the image content.
     data = []
+    print(responses)
     for response in responses:
         data.append(response)
     print('response in route' , responses) #to test if the response is coming or not 
