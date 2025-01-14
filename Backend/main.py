@@ -19,10 +19,10 @@ app = FastAPI(lifespan=lifespan)
 # Add CORSMiddleware to the app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # Domains allowed to make requests
-    allow_credentials=True,         # Allow cookies and other credentials
-    allow_methods=["*"],            # HTTP methods allowed
-    allow_headers=["*"],            # HTTP headers allowed
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")

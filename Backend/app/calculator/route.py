@@ -23,5 +23,5 @@ async def analyze(data: ImageData):
     return {
         'message' : 'Image Processed Successfully',
         'type': "success",
-        "data" : data 
+        "data" : data,
     }

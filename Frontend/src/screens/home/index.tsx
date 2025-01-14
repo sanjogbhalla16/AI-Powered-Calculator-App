@@ -53,6 +53,8 @@ const HomeScreen: React.FC = () => {
           dict_of_vars: dictOfVars,
         },
       });
+      //   .then((res) => res)
+      //   .catch((err) => console.log(err));
       const resp = await response.data;
       console.log("Response: ", resp);
     }
