@@ -5,7 +5,7 @@ from PIL import Image
 from constants import GEMINI_API_KEY
 
 #this will take the API key 
-genai.configure(api_key="GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_API_KEY)
 
 def analyze_image(img: Image, dict_of_vars: dict):
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
