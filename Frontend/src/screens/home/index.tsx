@@ -57,8 +57,8 @@ const HomeScreen: React.FC = () => {
           dict_of_vars: dictOfVars,
         },
       });
-      console.log(canvas.toDataURL("image/png"));
-      console.log(dictOfVars);
+      //console.log(canvas.toDataURL("image/png"));
+      //console.log(dictOfVars);
 
       //   .then((res) => res)
       //   .catch((err) => console.log(err));

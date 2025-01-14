@@ -18,7 +18,7 @@ async def analyze(data: ImageData):
     data = []
     for response in responses:
         data.append(response)
-    print('response in route' , response) #to test if the response is coming or not 
+    print('response in route' , responses) #to test if the response is coming or not 
     #return data into json format
     return {
         'message' : 'Image Processed Successfully',
