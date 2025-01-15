@@ -22,15 +22,32 @@ const HomeScreen: React.FC = () => {
   const [reset, SetReset] = useState(false);
   const [result, setResult] = useState<GeneratedResult>();
   const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
-  const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 });
+  const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 }); //where to render our answer
   const [dictOfVars, setDictOfVars] = useState({}); //x = 5 , y = 8
 
   useEffect(() => {
     if (reset) {
       resetCanvas();
+      setLatexExpression([]);
+      setResult(undefined);
+      setDictOfVars({});
       SetReset(false);
     }
   }, [reset]);
+
+  useEffect(() => {
+    if (latexExpression.length > 0 && window.MathJax) {
+      setTimeout(() => {
+        window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub]);
+      }, 0);
+    }
+  }, [latexExpression]);
+
+  useEffect(() => {
+    if (result) {
+      renderLatexToCanvas(result.expression, result.answer);
+    }
+  }, [result]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -65,6 +82,20 @@ const HomeScreen: React.FC = () => {
     };
   }, []);
 
+  const renderLatexToCanvas = (expression: string, answer: string) => {
+    //take our latex and convert it into large expression
+    const latex = `\\(\\LARGE{${expression} = ${answer}}\\)`;
+    setLatexExpression([...latexExpression, latex]);
+
+    // Clear the main canvas
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+  };
   const sendData = async () => {
     const canvas = canvasRef.current;
 
