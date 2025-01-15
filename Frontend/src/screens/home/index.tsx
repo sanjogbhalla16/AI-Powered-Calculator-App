@@ -3,7 +3,7 @@ import { SWATCHES } from "@/constants";
 import { ColorSwatch, Group } from "@mantine/core";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { data } from "react-router-dom";
+import Draggable from "react-draggable";
 
 interface Response {
   expr: string;
@@ -118,8 +118,52 @@ const HomeScreen: React.FC = () => {
       //   .catch((err) => console.log(err));
       const resp = await response.data;
       console.log("Response: ", resp);
+      resp.data.forEach((data: Response) => {
+        if (data.assign === true) {
+          // dict_of_vars[resp.result] = resp.answer;
+          setDictOfVars({
+            ...dictOfVars, //spread operator
+            [data.expr]: data.result, // x = 5 , y = 8
+          });
+        }
+      });
+      //now we find the center of the page where we render our output
+      const ctx = canvas.getContext("2d");
+      const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
+      let minX = canvas.width,
+        minY = canvas.height,
+        maxX = 0,
+        maxY = 0;
+
+      for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+          const i = (y * canvas.width + x) * 4;
+          if (imageData.data[i + 3] > 0) {
+            // If pixel is not transparent
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+          }
+        }
+      }
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      setLatexPosition({ x: centerX, y: centerY });
+
+      setLatexPosition({ x: centerX, y: centerY });
+      resp.data.forEach((data: Response) => {
+        setTimeout(() => {
+          setResult({
+            expression: data.expr,
+            answer: data.result,
+          });
+        }, 1000);
+      });
     }
   };
+
   const resetCanvas = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -196,6 +240,18 @@ const HomeScreen: React.FC = () => {
         onMouseOut={stopDrawing}
         onMouseMove={draw}
       />
+      {latexExpression &&
+        latexExpression.map((latex, index) => (
+          <Draggable
+            key={index}
+            defaultPosition={latexPosition}
+            onStop={(e, data) => setLatexPosition({ x: data.x, y: data.y })}
+          >
+            <div className="absolute p-2 text-white rounded shadow-md">
+              <div className="latex-content">{latex}</div>
+            </div>
+          </Draggable>
+        ))}
     </>
   );
 };
