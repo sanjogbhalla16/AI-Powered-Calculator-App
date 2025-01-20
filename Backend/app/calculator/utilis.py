@@ -31,18 +31,33 @@ def analyze_image(img: Image, dict_of_vars: dict):
         f"DO NOT USE BACKTICKS OR MARKDOWN FORMATTING. "
         f"PROPERLY QUOTE THE KEYS AND VALUES IN THE DICTIONARY FOR EASIER PARSING WITH Python's ast.literal_eval."
     )
-    #Sends the prompt and image to the AI model for processing.
+    # Sends the prompt and image to the AI model for processing.
     response = model.generate_content([prompt, img])
-    print(response.text)
+    raw_text = response.text.strip()
+
+    # Remove ```json and ``` if they exist in the response.
+    if raw_text.startswith("```json"):
+        raw_text = raw_text[7:]  # Remove the first 7 characters (```json).
+    if raw_text.endswith("```"):
+        raw_text = raw_text[:-3]  # Remove the last 3 characters (```).
+
     answers = []
     try:
-        answers = ast.literal_eval(response.text) #Uses ast.literal_eval to safely convert the response (a string) into a Python list of dictionaries.
+        # Attempt to parse the sanitized response.
+        answers = ast.literal_eval(raw_text)
+        
+        # Ensure the parsed response is a list of dictionaries.
+        if not isinstance(answers, list) or not all(isinstance(item, dict) for item in answers):
+            raise ValueError("Parsed response is not a list of dictionaries.")
     except Exception as e:
         print(f"Error in parsing response from Gemini API: {e}")
-    print('returned answer ', answers)
+        print(f"Sanitized response: {raw_text}")
+        return []  # Return an empty list if parsing fails.
+
+    print('Returned answer:', answers)
+
+    # Add the 'assign' key to each dictionary in the response.
     for answer in answers:
-        if 'assign' in answer:
-            answer['assign'] = True
-        else:
-            answer['assign'] = False
+        answer['assign'] = answer.get('assign', False)
+
     return answers
