@@ -15,20 +15,22 @@ interface GeneratedResult {
   expression: string;
   answer: string;
 }
+
 const HomeScreen: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [color, setColor] = useState("rgb(255,255,255)");
   const [reset, SetReset] = useState(false);
   const [result, setResult] = useState<GeneratedResult>();
-  const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
-  const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 }); //where to render our answer
-  const [dictOfVars, setDictOfVars] = useState({}); //x = 5 , y = 8
+  const [latexExpressions, setLatexExpressions] = useState<
+    Array<{ id: number; expression: string }>
+  >([]);
+  const [dictOfVars, setDictOfVars] = useState({});
 
   useEffect(() => {
     if (reset) {
       resetCanvas();
-      setLatexExpression([]);
+      setLatexExpressions([]);
       setResult(undefined);
       setDictOfVars({});
       SetReset(false);
@@ -36,30 +38,6 @@ const HomeScreen: React.FC = () => {
   }, [reset]);
 
   useEffect(() => {
-    if (latexExpression.length > 0 && window.MathJax) {
-      setTimeout(() => {
-        window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub]);
-      }, 0);
-    }
-  }, [latexExpression]);
-
-  useEffect(() => {
-    if (result) {
-      renderLatexToCanvas(result.expression, result.answer);
-    }
-  }, [result]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight - canvas.offsetTop;
-        ctx.lineCap = "round";
-        ctx.lineWidth = 3;
-      }
-    }
     const script = document.createElement("script");
     script.src =
       "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-MML-AM_CHTML";
@@ -82,23 +60,8 @@ const HomeScreen: React.FC = () => {
     };
   }, []);
 
-  const renderLatexToCanvas = (expression: string, answer: string) => {
-    //take our latex and convert it into large expression
-    const latex = `\\(\\LARGE{${expression} = ${answer}}\\)`;
-    setLatexExpression([...latexExpression, latex]);
-
-    // Clear the main canvas
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-  };
   const sendData = async () => {
     const canvas = canvasRef.current;
-
     if (canvas) {
       const response = await axios({
         method: "post",
@@ -111,54 +74,25 @@ const HomeScreen: React.FC = () => {
           dict_of_vars: dictOfVars,
         },
       });
-      //console.log(canvas.toDataURL("image/png"));
-      //console.log(dictOfVars);
 
-      //   .then((res) => res)
-      //   .catch((err) => console.log(err));
       const resp = await response.data;
       console.log("Response: ", resp);
+
       resp.data.forEach((data: Response) => {
-        if (data.assign === true) {
-          // dict_of_vars[resp.result] = resp.answer;
+        if (data.assign) {
           setDictOfVars({
-            ...dictOfVars, //spread operator
-            [data.expr]: data.result, // x = 5 , y = 8
+            ...dictOfVars,
+            [data.expr]: data.result,
           });
         }
-      });
-      //now we find the center of the page where we render our output
-      const ctx = canvas.getContext("2d");
-      const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height);
-      let minX = canvas.width,
-        minY = canvas.height,
-        maxX = 0,
-        maxY = 0;
-
-      for (let y = 0; y < canvas.height; y++) {
-        for (let x = 0; x < canvas.width; x++) {
-          const i = (y * canvas.width + x) * 4;
-          if (imageData.data[i + 3] > 0) {
-            // If pixel is not transparent
-            minX = Math.min(minX, x);
-            minY = Math.min(minY, y);
-            maxX = Math.max(maxX, x);
-            maxY = Math.max(maxY, y);
-          }
-        }
-      }
-      const centerX = (minX + maxX) / 2;
-      const centerY = (minY + maxY) / 2;
-
-      setLatexPosition({ x: centerX, y: centerY });
-
-      setLatexPosition({ x: centerX, y: centerY });
-      resp.data.forEach((data: Response) => {
         setTimeout(() => {
-          setResult({
-            expression: data.expr,
-            answer: data.result,
-          });
+          setLatexExpressions((prev) => [
+            ...prev,
+            {
+              id: Date.now(),
+              expression: `\\(\\LARGE{${data.expr} = ${data.result}}\\)`,
+            },
+          ]);
         }, 1000);
       });
     }
@@ -173,10 +107,10 @@ const HomeScreen: React.FC = () => {
       }
     }
   };
+
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (canvas) {
-      canvas.style.background = "black";
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.beginPath();
@@ -202,35 +136,40 @@ const HomeScreen: React.FC = () => {
       }
     }
   };
+
+  const deleteExpression = (id: number) => {
+    setLatexExpressions((prev) => prev.filter((exp) => exp.id !== id));
+  };
+
   return (
     <>
-      <div className="grid grid-cols-3 gap-2">
+      {/* Toolbar for Color Selection and Buttons */}
+      <div className="flex justify-center items-center gap-4 p-4 bg-gradient-to-r from-gray-800 to-gray-900 rounded-md shadow-md">
         <Button
           onClick={() => SetReset(true)}
-          className="z-20 bg-black text-white"
-          variant="default"
-          color="black"
+          className="bg-red-600 hover:bg-red-700 text-white"
         >
           Reset
         </Button>
-        <Group className="z-20">
+        <Group className="flex gap-2">
           {SWATCHES.map((swatchColor: string) => (
             <ColorSwatch
               key={swatchColor}
               color={swatchColor}
+              className="cursor-pointer border-2 border-white hover:scale-110 transition"
               onClick={() => setColor(swatchColor)}
             />
           ))}
         </Group>
         <Button
           onClick={sendData}
-          className="z-20 bg-black text-white"
-          variant="default"
-          color="black"
+          className="bg-green-600 hover:bg-green-700 text-white"
         >
           Calculate
         </Button>
       </div>
+
+      {/* Canvas Area */}
       <canvas
         ref={canvasRef}
         id="canvas"
@@ -240,18 +179,23 @@ const HomeScreen: React.FC = () => {
         onMouseOut={stopDrawing}
         onMouseMove={draw}
       />
-      {latexExpression &&
-        latexExpression.map((latex, index) => (
-          <Draggable
-            key={index}
-            defaultPosition={latexPosition}
-            onStop={(e, data) => setLatexPosition({ x: data.x, y: data.y })}
-          >
-            <div className="absolute p-2 text-white rounded shadow-md">
-              <div className="latex-content">{latex}</div>
+
+      {/* Expression Cards */}
+      <div className="absolute top-16 right-10 flex flex-col gap-3">
+        {latexExpressions.map((exp) => (
+          <Draggable key={exp.id}>
+            <div className="relative p-4 bg-gray-700 text-white rounded-lg shadow-lg w-64 hover:scale-105 transition">
+              <div className="latex-content">{exp.expression}</div>
+              <button
+                onClick={() => deleteExpression(exp.id)}
+                className="absolute top-2 right-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-full p-1"
+              >
+                ✕
+              </button>
             </div>
           </Draggable>
         ))}
+      </div>
     </>
   );
 };
