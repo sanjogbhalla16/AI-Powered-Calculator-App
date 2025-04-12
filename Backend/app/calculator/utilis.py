@@ -1,14 +1,13 @@
-import google.generativeai as genai
+import google as genai
 import ast # Used to safely parse strings (like API responses) into Python objects.
 import json
 from PIL import Image
 from constants import GEMINI_API_KEY
 
 #this will take the API key 
-genai.configure(api_key=GEMINI_API_KEY)
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def analyze_image(img: Image, dict_of_vars: dict):
-    model = genai.GenerativeModel(model_name="gemini-2.0-flash")
     dict_of_vars_str = json.dumps(dict_of_vars, ensure_ascii=False)
     prompt = (
         f"You have been given an image with some mathematical expressions, equations, or graphical problems, and you need to solve them. "
@@ -31,18 +30,23 @@ def analyze_image(img: Image, dict_of_vars: dict):
         f"DO NOT USE BACKTICKS OR MARKDOWN FORMATTING. "
         f"PROPERLY QUOTE THE KEYS AND VALUES IN THE DICTIONARY FOR EASIER PARSING WITH Python's ast.literal_eval."
     )
-    # Sends the prompt and image to the AI model for processing.
-    response = model.generate_content([prompt, img])
-    raw_text = response.text.strip()
-
-    # Remove ```json and ``` if they exist in the response.
-    if raw_text.startswith("```json"):
-        raw_text = raw_text[7:]  # Remove the first 7 characters (```json).
-    if raw_text.endswith("```"):
-        raw_text = raw_text[:-3]  # Remove the last 3 characters (```).
-
-    answers = []
+    
     try:
+        # Sends the prompt and image to the AI model for processing.
+        response = client.models.generate_content(
+            model = "gemini-2.0-flash",
+            contents = [prompt,img]
+        )
+        raw_text = response.text.strip()
+        
+        #This raw_text needs to be refined so we remove ```json and ``` if they exist
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+            
+        answers = []
+        
         # Attempt to parse the sanitized response.
         answers = ast.literal_eval(raw_text)
         
