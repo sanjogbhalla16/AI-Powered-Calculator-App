@@ -47,21 +47,23 @@ def analyze_image(img: Image, dict_of_vars: dict):
             
         answers = []
         
-        # Attempt to parse the sanitized response.
+        # It's a safe way to parse a string that looks like a Python object (like a list or dictionary) into an actual Python object.
+        #“I'll only read safe stuff like numbers, strings, lists, and dicts. Nothing shady.”
         answers = ast.literal_eval(raw_text)
         
         # Ensure the parsed response is a list of dictionaries.
         if not isinstance(answers, list) or not all(isinstance(item, dict) for item in answers):
             raise ValueError("Parsed response is not a list of dictionaries.")
+      
+        print('Returned answer:', answers)
+
+        # Add the 'assign' key to each dictionary in the response.
+        for answer in answers:
+            answer['assign'] = answer.get('assign', False)
+
+        return answers
+    
     except Exception as e:
         print(f"Error in parsing response from Gemini API: {e}")
         print(f"Sanitized response: {raw_text}")
-        return []  # Return an empty list if parsing fails.
-
-    print('Returned answer:', answers)
-
-    # Add the 'assign' key to each dictionary in the response.
-    for answer in answers:
-        answer['assign'] = answer.get('assign', False)
-
-    return answers
+        return []
