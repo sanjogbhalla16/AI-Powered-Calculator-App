@@ -1,11 +1,11 @@
-import google as genai
+import google.generativeai as genai
 import ast # Used to safely parse strings (like API responses) into Python objects.
 import json
 from PIL import Image
 from constants import GEMINI_API_KEY
 
 #this will take the API key 
-client = genai.Client(api_key=GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
 
 def analyze_image(img: Image, dict_of_vars: dict):
     dict_of_vars_str = json.dumps(dict_of_vars, ensure_ascii=False)
@@ -33,10 +33,8 @@ def analyze_image(img: Image, dict_of_vars: dict):
     
     try:
         # Sends the prompt and image to the AI model for processing.
-        response = client.models.generate_content(
-            model = "gemini-2.0-flash",
-            contents = [prompt,img]
-        )
+        model = genai.GenerativeModel(model_name="gemini-2.0-flash")
+        response = model.generate_content([prompt, img])
         raw_text = response.text.strip()
         
         #This raw_text needs to be refined so we remove ```json and ``` if they exist
