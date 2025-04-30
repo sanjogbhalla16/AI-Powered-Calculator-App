@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
-import WhiteBoard from "./WhiteBoard/page";
+import whiteboardIdPage from "./whiteboard/[id]/page";
 
 export default function Home() {
   return (
@@ -14,7 +14,6 @@ export default function Home() {
         <h1 className="text-4xl font-bold mb-8">
           InkFlow - Your magic calculator
         </h1>
-        <WhiteBoard></WhiteBoard>
         <ThemeToggle></ThemeToggle>
       </ThemeProvider>
     </div>
