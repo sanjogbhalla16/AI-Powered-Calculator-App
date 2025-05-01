@@ -2,7 +2,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 
-const CanvasBoard: React.FC = () => {
+interface CanvasBoardProps {
+  canvasBoardId: string;
+}
+
+const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useRef is a React Hook that lets you reference a value that's not needed for rendering.
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
