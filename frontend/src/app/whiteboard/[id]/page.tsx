@@ -7,9 +7,12 @@ interface WhiteboardIdPageProps {
   };
 }
 
-const WhiteboardIdPage = ({ params }: WhiteboardIdPageProps) => {
-  const { id } = params;
-
+// ✅ Mark the function as async
+export default async function WhiteboardIdPage({
+  params,
+}: WhiteboardIdPageProps) {
+  //const id = params.id; // this will function when the function is async and the await is not a promise
+  const { id } = await params;
   if (!id) return notFound();
 
   return (
@@ -20,6 +23,4 @@ const WhiteboardIdPage = ({ params }: WhiteboardIdPageProps) => {
       </div>
     </div>
   );
-};
-
-export default WhiteboardIdPage;
+}
