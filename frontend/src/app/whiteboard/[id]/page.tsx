@@ -1,33 +1,25 @@
 import { notFound } from "next/navigation";
 import CanvasBoard from "@/components/CanvasBoard";
-import { v4 as uuidv4 } from "uuid";
-import router from "next/router";
 
-interface whiteboardIdPageProps {
+interface WhiteboardIdPageProps {
   params: {
     id: string;
   };
 }
-const whiteboardIdPage = ({ params }: whiteboardIdPageProps) => {
-  const { id } = params;
-  if (!id) return notFound(); // Handles invalid cases
 
-  const createNewWhiteBoard = () => {
-    const newWhiteboardId = uuidv4();
-    router.push(`/whiteboard/${newWhiteboardId}`);
-  };
+const WhiteboardIdPage = ({ params }: WhiteboardIdPageProps) => {
+  const { id } = params;
+
+  if (!id) return notFound();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-4">
-      <h1 className="text-4xl font-bold">InkFlow</h1>
-      <button
-        onClick={createNewWhiteBoard}
-        className="bg-black text-white px-4 py-2 rounded"
-      >
-        Create New Whiteboard
-      </button>
+    <div className="flex flex-col items-center justify-center min-h-screen gap-6 p-6">
+      <h1 className="text-3xl font-bold">InkFlow - Whiteboard ID: {id}</h1>
+      <div className="w-full max-w-5xl border rounded-md mt-6">
+        <CanvasBoard canvasBoardId={id} />
+      </div>
     </div>
   );
 };
 
-export default whiteboardIdPage;
+export default WhiteboardIdPage;
