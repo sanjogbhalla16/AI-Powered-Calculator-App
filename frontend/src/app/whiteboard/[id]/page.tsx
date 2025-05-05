@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import CanvasBoard from "@/components/CanvasBoard";
 
-//now need to make changes in this
+//now need to make changes in this and we will do it tomorrow
 
 interface WhiteboardIdPageProps {
   params: {
