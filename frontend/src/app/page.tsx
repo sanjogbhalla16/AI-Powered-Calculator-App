@@ -24,7 +24,8 @@ export default function Home() {
         <h1 className="text-4xl font-bold">InkFlow - Your Magic Calculator</h1>
         <button
           onClick={handleCreateWhiteboard}
-          className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition"
+          //this cursor only work on the parent if you use on element which is a child then you need to add at the parent level
+          className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition cursor-pointer"
         >
           Create New Whiteboard
         </button>
