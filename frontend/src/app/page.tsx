@@ -23,7 +23,9 @@ export default function Home() {
     >
       <div className="flex flex-col items-center justify-center min-h-screen p-6 gap-8">
         <h1 className="text-4xl font-bold">InkFlow - Your Magic Calculator</h1>
-        <Button onClick={handleCreateWhiteboard}>Create New Whiteboard</Button>
+        <Button onClick={handleCreateWhiteboard} className="cursor-pointer">
+          Create New Whiteboard
+        </Button>
         <ThemeToggle />
       </div>
     </ThemeProvider>
