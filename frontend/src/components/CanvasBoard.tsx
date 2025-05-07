@@ -9,6 +9,7 @@ interface CanvasBoardProps {
 const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useRef is a React Hook that lets you reference a value that's not needed for rendering.
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [context, setContext] = useState(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
