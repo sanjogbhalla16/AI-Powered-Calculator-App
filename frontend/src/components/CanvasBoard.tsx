@@ -8,9 +8,17 @@ interface CanvasBoardProps {
 
 const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useRef is a React Hook that lets you reference a value that's not needed for rendering.
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [context, setContext] = useState(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null); //Access the canvas DOM element directly
+  const [context, setContext] = useState(null); //Holds the 2D drawing context from the canvas
   const [isDrawing, setIsDrawing] = useState(false);
+  const [currentColor, setCurrentColor] = useState("black");
+  const [linewidth, setLineWidth] = useState(3);
+  const [drawingAction, setDrawingAction] = useState([]); //drawing history
+  const [currentPath, setCurrentPath] = useState([]); //store the current path which includes mouse coordinates as the user draws.
+  const [currentStyle, setCurrentStyle] = useState({
+    color: "black",
+    linewidth: 3,
+  });
 
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
   useEffect(() => {
@@ -19,34 +27,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    ctx.fillStyle = "pink";
-    ctx.fillRect(10, 10, 150, 100);
-
-    const handleMouseDown = (e: MouseEvent) => {
-      setIsDrawing(true);
-      ctx.beginPath();
-      ctx.moveTo(e.offsetX, e.offsetY);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isDrawing) return;
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
-    };
-    const handleMouseUp = () => {
-      setIsDrawing(false);
-    };
-
-    canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseup", handleMouseUp);
-    };
   }, [isDrawing]);
   return (
     <div>
