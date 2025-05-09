@@ -23,11 +23,18 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      console.log(ctx);
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-  }, [isDrawing]);
+      if (ctx) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.lineCap = "round";
+        ctx.lineWidth = linewidth;
+      }
+    }
+  }, []);
   return (
     <div>
       <h2 className="text-xl font-bold mb-2">Draw on the Canvas</h2>
