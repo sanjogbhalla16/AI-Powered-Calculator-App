@@ -37,12 +37,10 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   }, []);
   return (
     <div>
-      <h2 className="text-xl font-bold mb-2">Draw on the Canvas</h2>
       <canvas
         ref={canvasRef}
-        width={500}
-        height={300}
-        style={{ border: "1px solid black", cursor: "crosshair" }}
+        id="canvas"
+        className="absolute top-0 left-0 width-full height-full"
       />
     </div>
   );
