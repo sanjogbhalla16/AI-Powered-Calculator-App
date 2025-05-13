@@ -24,7 +24,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
         canvas.height = window.innerHeight;
         ctx.lineCap = "round";
         ctx.lineWidth = 3;
-        reDrawPreviousData(ctx);
+        //reDrawPreviousData(ctx);
       }
     }
   }, []);
@@ -47,12 +47,27 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
     setIsDrawing(false);
   };
 
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.strokeStyle = "white";
+        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        ctx.stroke();
+      }
+    }
+  };
   return (
     <div>
       <canvas
         ref={canvasRef}
         id="canvas"
         className="absolute top-0 left-0 width-full height-full"
+        onMouseDown={startDrawing}
+        onMouseOut={stopDrawing}
+        onMouseUp={stopDrawing}
+        onMouseMove={draw}
       />
     </div>
   );
