@@ -11,14 +11,6 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null); //Access the canvas DOM element directly
   const [context, setContext] = useState(null); //Holds the 2D drawing context from the canvas
   const [isDrawing, setIsDrawing] = useState(false);
-  const [currentColor, setCurrentColor] = useState("black");
-  const [linewidth, setLineWidth] = useState(3);
-  const [drawingAction, setDrawingAction] = useState([]); //drawing history
-  const [currentPath, setCurrentPath] = useState([]); //store the current path which includes mouse coordinates as the user draws.
-  const [currentStyle, setCurrentStyle] = useState({
-    color: "black",
-    linewidth: 3,
-  });
 
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
   useEffect(() => {
@@ -31,10 +23,30 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         ctx.lineCap = "round";
-        ctx.lineWidth = linewidth;
+        ctx.lineWidth = 3;
+        reDrawPreviousData(ctx);
       }
     }
   }, []);
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.style.backgroundColor = "black";
+      const ctx = canvas.getContext("2d");
+
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        setIsDrawing(true);
+      }
+    }
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
   return (
     <div>
       <canvas
