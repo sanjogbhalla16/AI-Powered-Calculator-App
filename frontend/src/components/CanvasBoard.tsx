@@ -1,6 +1,9 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import { colors } from "./swatch";
+import { ColorSwatch, Group, rgba } from "@mantine/core";
 import axios from "axios";
+import { Button } from "./ui/button";
 
 interface CanvasBoardProps {
   canvasBoardId: string;
@@ -10,6 +13,8 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useRef is a React Hook that lets you reference a value that's not needed for rendering.
   const canvasRef = useRef<HTMLCanvasElement>(null); //Access the canvas DOM element directly
   const [isDrawing, setIsDrawing] = useState(false);
+  const [color, setColor] = useState("rgba(255, 255, 255)");
+  const [reset, setReset] = useState(false);
 
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
   useEffect(() => {
@@ -42,16 +47,25 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
     }
   };
 
+  const resetCanvas = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+    }
+  };
   const stopDrawing = () => {
     setIsDrawing(false);
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) {
+      return;
+    }
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = color;
         ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
         ctx.stroke();
       }
