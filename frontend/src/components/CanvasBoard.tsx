@@ -9,7 +9,6 @@ interface CanvasBoardProps {
 const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   //useRef is a React Hook that lets you reference a value that's not needed for rendering.
   const canvasRef = useRef<HTMLCanvasElement>(null); //Access the canvas DOM element directly
-  const [context, setContext] = useState(null); //Holds the 2D drawing context from the canvas
   const [isDrawing, setIsDrawing] = useState(false);
 
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
@@ -21,7 +20,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
 
       if (ctx) {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = window.innerHeight - canvas.offsetTop;
         ctx.lineCap = "round";
         ctx.lineWidth = 3;
         //reDrawPreviousData(ctx);
@@ -53,7 +52,7 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.strokeStyle = "white";
-        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
         ctx.stroke();
       }
     }
