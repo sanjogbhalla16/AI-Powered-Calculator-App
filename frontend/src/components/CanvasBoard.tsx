@@ -16,6 +16,13 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
   const [color, setColor] = useState("rgba(255, 255, 255)");
   const [reset, setReset] = useState(false);
 
+  useEffect(() => {
+    if (reset) {
+      resetCanvas();
+      setReset(false);
+    }
+  }, [reset]);
+
   //useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -47,15 +54,18 @@ const CanvasBoard: React.FC<CanvasBoardProps> = ({ canvasBoardId }) => {
     }
   };
 
-  const resetCanvas = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-    }
-  };
   const stopDrawing = () => {
     setIsDrawing(false);
   };
+
+  const resetCanvas = () =>{
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if(ctx){
+        ctx.clearRect(0,0,canvas.width,canvas.height)
+      }
+  }
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) {
